@@ -5,4 +5,5 @@ class User < ActiveRecord::Base
 	validates :password, presence: true
 
 	scope :get_user, -> (user_id, username, password) { where id: user_id, username: username, password: password }
+	scope :get_user, -> (username, password) { where username: username, password: password }
 end
