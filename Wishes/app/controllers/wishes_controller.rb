@@ -1,6 +1,6 @@
 class WishesController < ApplicationController
 	def index
-		@wishes = Wish.where(user_id: params[:user_id]);
+		@wishes = Wish.where(user_id: params[:user_id])
 		render json: @wishes
 	end
 
