@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 				post '/login' => 'users#login'
 				post '/signup' => 'users#create'
 
-				scope '/:id' do
+				scope '/:user_id' do
 					get '/' => 'users#show'
 					post '/' => 'users#update'
 =begin
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 					scope '/wishes' do
 						get '/' => 'wishes#index'
 						post '/' => 'wishes#create' 
-						scope '/:id' do
+						scope '/:wish_id' do
 							get '/' => 'wishes#show'
 							get '/edit' => 'wishes#edit'
 							put '' => 'wishes#update'
