@@ -6,8 +6,8 @@ class WishesController < ApplicationController
 	end
 
 	def show
-		@wish = Wish.where(id: params[:wish_id])
-		render json: @wish 
+		#@wish = Wish.where(id: params[:wish_id])
+		#render json: @wish 
 	end
 
 	def edit

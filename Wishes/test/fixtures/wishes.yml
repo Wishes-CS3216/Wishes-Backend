@@ -3,15 +3,17 @@
 one:
   title: MyString
   description: MyText
-  assign_to: 1
+  user: one
+  assigned_to: 1
   fulfill_status: 1
-  expiry_at: 2016-09-16 00:19:19
-  close_at: 2016-09-16 00:19:19
+  expiry_at: 2016-09-16 00:54:14
+  close_at: 2016-09-16 00:54:14
 
 two:
   title: MyString
   description: MyText
-  assign_to: 1
+  user: two
+  assigned_to: 1
   fulfill_status: 1
-  expiry_at: 2016-09-16 00:19:19
-  close_at: 2016-09-16 00:19:19
+  expiry_at: 2016-09-16 00:54:14
+  close_at: 2016-09-16 00:54:14

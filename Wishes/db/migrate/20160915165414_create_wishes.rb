@@ -3,7 +3,8 @@ class CreateWishes < ActiveRecord::Migration[5.0]
     create_table :wishes do |t|
       t.string :title
       t.text :description
-      t.integer :assign_to
+      t.references :user, foreign_key: true
+      t.integer :assigned_to
       t.integer :fulfill_status
       t.datetime :expiry_at
       t.datetime :close_at
