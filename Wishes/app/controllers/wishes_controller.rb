@@ -1,8 +1,11 @@
 class WishesController < ApplicationController
 	def index
+		@wishes = Wish.where(user_id: params[:user_id]);
+		render json: @wishes
 	end
 
 	def create
+		@wish = Wish.create(user_id: params[:user_id], title: params[:title])
 	end
 
 	def show
