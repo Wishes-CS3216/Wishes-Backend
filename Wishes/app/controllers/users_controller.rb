@@ -10,8 +10,12 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = User.where(username: params[:username], password: params[:password])
-		render json: @user 
+		@user = User.get_user(params[:user_id], params[:username], params[:password])
+		if @user.present?
+			render json: @user.first
+		else
+			render json: {error: "No such user"}
+		end
 	end
 
 	def update
