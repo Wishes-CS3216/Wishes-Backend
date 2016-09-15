@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 						get '/' => 'activities#index'
 						post '/archive' => 'activities#archive'
 					end
-
+=end
 					scope '/wishes' do
 						get '/' => 'wishes#index'
 						post '/' => 'wishes#create' 
@@ -29,11 +29,10 @@ Rails.application.routes.draw do
 							put '' => 'wishes#update'
 						end
 					end
-=end
+
 				end
 
 			end
 		end
 	end
-
 end
