@@ -3,7 +3,10 @@ class UsersController < ApplicationController
 	end
 
 	def create
-		@user = User.create(username: params[:username], password: params[:password])
+		@user = User.new(user_params)
+		User.transaction do
+			@user.save!
+		end
 	end
 
 	def show
@@ -12,5 +15,11 @@ class UsersController < ApplicationController
 	end
 
 	def update
+	end
+
+private
+
+	def user_params
+		params.permit([:username, :password])
 	end
 end
