@@ -14,12 +14,12 @@ Rails.application.routes.draw do
 					scope '/reports' do
 						post '/' => 'reports#create'
 					end
-=begin
+
 					scope '/activities' do
 						get '/' => 'activities#index'
 						post '/archive' => 'activities#archive'
 					end
-=end
+
 					scope '/wishes' do
 						get '/' => 'wishes#index'
 						post '/' => 'wishes#create' 
