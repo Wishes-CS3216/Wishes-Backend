@@ -12,8 +12,8 @@ class WishesController < ApplicationController
 	end
 
 	def show
-		#@wish = Wish.where(id: params[:wish_id])
-		#render json: @wish 
+		@wish = Wish.find(params[:wish_id])
+		return_wish_as_json(@wish)
 	end
 
 	def edit
@@ -22,6 +22,14 @@ class WishesController < ApplicationController
 	def update
 	end
 private
+	def return_wish_as_json(wish)
+		if wish.present?
+			render json: wish.first
+		else
+			render json: { error: "No such wish" }
+		end
+	end
+
 	def wish_params
 		params.permit([:user_id, :title, :description])
 	end
