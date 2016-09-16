@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  wish: one
+  message_enum: 1
+  is_read: false
+
+two:
+  user: two
+  wish: two
+  message_enum: 1
+  is_read: false

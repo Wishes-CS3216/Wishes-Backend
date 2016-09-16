@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160916142015) do
+ActiveRecord::Schema.define(version: 20160916143718) do
+
+  create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "wish_id"
+    t.integer  "message_enum"
+    t.boolean  "is_read"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["user_id"], name: "index_activities_on_user_id", using: :btree
+    t.index ["wish_id"], name: "index_activities_on_wish_id", using: :btree
+  end
 
   create_table "reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "reporter_id"
@@ -43,5 +54,7 @@ ActiveRecord::Schema.define(version: 20160916142015) do
     t.index ["user_id"], name: "index_wishes_on_user_id", using: :btree
   end
 
+  add_foreign_key "activities", "users"
+  add_foreign_key "activities", "wishes"
   add_foreign_key "wishes", "users"
 end

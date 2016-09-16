@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 	has_many :wishes
 	has_many :reports
+	has_many :activities
 
 	validates :username, presence: true, uniqueness: true
 	validates :password, presence: true
