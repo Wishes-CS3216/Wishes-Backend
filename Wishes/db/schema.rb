@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20160916143718) do
     t.string   "password"
     t.string   "phone"
     t.string   "email"
-    t.string   "email_verified"
+    t.boolean  "email_verified"
     t.string   "display_name"
     t.string   "random_name"
     t.integer  "points"
