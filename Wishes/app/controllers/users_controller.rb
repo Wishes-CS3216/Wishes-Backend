@@ -8,6 +8,7 @@ class UsersController < ApplicationController
 		@user = User.new(user_params)
 		User.transaction do
 			@user.save!
+			render json: { success: "Created user" }
 		end
 	end
 

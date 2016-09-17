@@ -3,7 +3,7 @@ class ReportsController < ApplicationController
 		@report = Report.new(report_params)
 		Report.transaction do
 			@report.save!
-			render json: {status: "Created report successfully"}
+			render json: { success: "Created report" }
 		end
 	end
 private
