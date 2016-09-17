@@ -6,8 +6,8 @@ class User < ApplicationRecord
 	validates :username, presence: true, uniqueness: true
 	validates :password, presence: true
 
-	scope :get_user, -> (user_id, username, password) { where id: user_id, username: username, password: password }
-	scope :get_user, -> (username, password) { where username: username, password: password }
+	scope :user_show, -> (user_id, username, password) { where id: user_id, username: username, password: password }
+	scope :user_login, -> (username, password) { where username: username, password: password }
 
 	before_save { |user| user.username = user.username.downcase }
 end

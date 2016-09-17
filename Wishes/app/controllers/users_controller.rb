@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 	def login
-		@user = User.get_user(params[:username], params[:password])
+		@user = User.user_login(params[:username], params[:password])
 		return_user_as_json(@user)
 	end
 
@@ -16,7 +16,7 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = User.get_user(params[:user_id], params[:username], params[:password])
+		@user = User.user_show(params[:user_id], params[:username], params[:password])
 		return_user_as_json(@user)
 	end
 
