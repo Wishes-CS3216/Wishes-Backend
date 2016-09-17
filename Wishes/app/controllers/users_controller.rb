@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 	def create
 		@user = User.new(user_params)
 		User.transaction do
-			@user.points = 200
+			@user.points = 0
 			@user.save!
 			render json: { success: "Created user" }
 		end
