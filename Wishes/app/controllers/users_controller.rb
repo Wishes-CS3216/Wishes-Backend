@@ -7,6 +7,7 @@ class UsersController < ApplicationController
 	def create
 		@user = User.new(user_params)
 		User.transaction do
+			@user.points = 200
 			@user.save!
 		end
 	end
