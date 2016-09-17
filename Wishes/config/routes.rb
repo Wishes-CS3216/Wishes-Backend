@@ -29,9 +29,11 @@ Rails.application.routes.draw do
 							put '' => 'wishes#update'
 						end
 					end
-
 				end
+			end
 
+			scope '/leaderboard' do
+				get '/' => 'leaderboard#show'
 			end
 		end
 	end
