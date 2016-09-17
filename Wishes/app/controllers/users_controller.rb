@@ -26,7 +26,7 @@ class UsersController < ApplicationController
 				@user.update!(user_params[:user])
 				render json: { success: "Updated user" }
 			end
-		elsif @user.username == params[:username].downcase!
+		elsif @user.username == params[:username].downcase
 			if @user.password == params[:old_password]
 				User.transaction do
 					@user.password = params[:new_password]

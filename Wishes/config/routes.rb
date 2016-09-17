@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
 				scope '/:user_id' do
 					get '/' => 'users#show'
-					put '/' => 'users#update'
+					post '/' => 'users#update'
 
 					scope '/reports' do
 						post '/' => 'reports#create'
