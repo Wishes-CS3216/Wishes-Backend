@@ -20,11 +20,21 @@ class UsersController < ApplicationController
 	end
 
 	def update
+		@user = User.find(params[:user_id])
 		if params[:user]
-			@user = User.find(params[:user_id])
 			User.transaction do
 				@user.update!(user_params[:user])
 				render json: { success: "Updated user" }
+			end
+		elsif @user.username == params[:username].downcase!
+			if @user.password == params[:old_password]
+				User.transaction do
+					@user.password = params[:new_password]
+					@user.save!
+					render json: { success: "Updated password" }
+				end
+			else
+				render json: { error: "Your old password does not match." }
 			end
 		end
 	end
