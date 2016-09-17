@@ -20,6 +20,13 @@ class UsersController < ApplicationController
 	end
 
 	def update
+		if params[:user]
+			@user = User.find(params[:user_id])
+			User.transaction do
+				@user.update!(user_params[:user])
+				render json: { success: "Updated user" }
+			end
+		end
 	end
 
 private
@@ -36,6 +43,8 @@ private
 	end
 
 	def user_params
-		params.permit([:username, :password, :phone, :email, :display_name])
+		params.permit([:username, :password, :phone, :email, :display_name,
+			           {user: [:phone, :email, :display_name]}
+			         ])
 	end
 end
