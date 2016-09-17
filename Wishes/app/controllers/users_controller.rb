@@ -8,8 +8,6 @@ class UsersController < ApplicationController
 		@user = User.new(user_params)
 		User.transaction do
 			@user.points = 200
-			@user.posted_wishes_count = 0
-			@user.fulfilled_wishes_count = 0
 			@user.save!
 			render json: { success: "Created user" }
 		end
@@ -26,7 +24,11 @@ class UsersController < ApplicationController
 private
 	def return_user_as_json(user)
 		if user.present?
-			render json: user.first
+			user = user.first
+			user_hash = user.as_json
+			user_hash[:number_of_wishes] = user.wishes.count
+			user_hash[:number_of_wishes_fulfilled] = Wish.where(assigned_to: user.id, fulfill_status: "Wish-er marked as fulfilled").count
+			render json: user_hash
 		else
 			render json: { error: "No such user" }
 		end
