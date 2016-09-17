@@ -8,6 +8,8 @@ class UsersController < ApplicationController
 		@user = User.new(user_params)
 		User.transaction do
 			@user.points = 200
+			@user.posted_wishes_count = 0
+			@user.fulfilled_wishes_count = 0
 			@user.save!
 			render json: { success: "Created user" }
 		end
