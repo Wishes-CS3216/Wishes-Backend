@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160917040633) do
+ActiveRecord::Schema.define(version: 20160917075451) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(version: 20160917040633) do
     t.datetime "updated_at",             null: false
     t.integer  "posted_wishes_count"
     t.integer  "fulfilled_wishes_count"
+    t.string   "auth_token"
+    t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
   end
 
   create_table "wishes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
