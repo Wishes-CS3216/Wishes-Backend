@@ -11,7 +11,7 @@ class User < ApplicationRecord
 	scope :user_login, -> (username, password) { where username: username, password: password }
 
 	before_save { |user| user.username = user.username.downcase }
-	before_create :generate_authentication_token!
+	#before_create :generate_authentication_token!
 
 private
 	def generate_authentication_token!
