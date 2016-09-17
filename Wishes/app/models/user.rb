@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 	has_many :wishes
 	has_many :reports
 	has_many :activities
