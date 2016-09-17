@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 	end
 
 	def create
-		@user = User.new(user_params)
+		@user = User.new(user_params[:user])
 		User.transaction do
 			@user.points = 0
 			@user.email_verified = false
@@ -23,21 +23,40 @@ class UsersController < ApplicationController
 
 	def update
 		@user = User.find(params[:user_id])
-		if params[:user]
-			User.transaction do
-				@user.update!(user_params[:user])
-				render json: { success: "Updated user" }
-			end
-		elsif @user.username == params[:username].downcase
-			if @user.password == params[:old_password]
+		# Attempt to change password if username, old and new password is present in params
+		if params[:username].present? && params[:old_password].present? && params[:new_password].present?
+			if @user.username != params[:username].downcase
+				render json: { error: "Username does not match." }
+			elsif @user.password != params[:old_password]
+				render json: { error: "Your old password does not match." }
+			else
 				User.transaction do
 					@user.password = params[:new_password]
 					@user.save!
 					render json: { success: "Updated password" }
 				end
-			else
-				render json: { error: "Your old password does not match." }
 			end
+		# Attempt to update user info if BOTH old and new password is NOT present
+		elsif params[:old_password] == nil && params[:old_password] == nil
+			# Store copy of user to see if anything changed after update.
+			@user_copy = User.find(params[:user_id])
+			User.transaction do
+				@user.update!(user_update_params[:user])
+			end
+			if (@user_copy.as_json == @user.as_json)
+				render json: { warning: "Nothing was updated" }
+			else
+				render json: { success: "Updated user" }
+			end
+		# Catch any other possible combination of arguments
+		else
+			render json: { error: "Wrong arguments" }
+		end
+	rescue Exception
+		if @user.errors.present?
+			render json: { message: "Validation failed", error: @user.errors }
+		else
+			render json: { error: "Update failed" }
 		end
 	end
 
@@ -55,8 +74,10 @@ private
 	end
 
 	def user_params
-		params.permit([:username, :password, :phone, :email, :display_name,
-			           {user: [:phone, :email, :display_name]}
-			         ])
+		params.permit({user: [:username, :password, :phone, :email, :display_name]})
+	end
+
+	def user_update_params
+		params.permit({user: [:username, :phone, :email, :display_name]})
 	end
 end
