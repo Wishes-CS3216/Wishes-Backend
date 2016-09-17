@@ -10,7 +10,7 @@ class User < ApplicationRecord
 	scope :user_show, -> (user_id, username, password) { where id: user_id, username: username, password: password }
 	scope :user_login, -> (username, password) { where username: username, password: password }
 
-	before_save { |user| user.username = user.username.downcase }
+	before_validation { |user| user.username = user.username.downcase }
 	#before_create :generate_authentication_token!
 
 private
