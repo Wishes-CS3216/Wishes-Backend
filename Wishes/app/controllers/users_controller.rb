@@ -35,6 +35,6 @@ private
 	end
 
 	def user_params
-		params.permit([:username, :password, :phone, :display_name])
+		params.permit([:username, :password, :phone, :email, :display_name])
 	end
 end

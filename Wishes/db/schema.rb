@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160917040633) do
+ActiveRecord::Schema.define(version: 20160916143718) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -24,23 +24,25 @@ ActiveRecord::Schema.define(version: 20160917040633) do
   end
 
   create_table "reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "reporter_id"
-    t.integer  "reportee_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "reported_user_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["reported_user_id"], name: "index_reports_on_reported_user_id", using: :btree
+    t.index ["user_id"], name: "index_reports_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "username"
     t.string   "password"
     t.string   "phone"
+    t.string   "email"
+    t.string   "email_verified"
     t.string   "display_name"
     t.string   "random_name"
     t.integer  "points"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "posted_wishes_count"
-    t.integer  "fulfilled_wishes_count"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "wishes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -58,5 +60,5 @@ ActiveRecord::Schema.define(version: 20160917040633) do
 
   add_foreign_key "activities", "users"
   add_foreign_key "activities", "wishes"
-  add_foreign_key "wishes", "users"
+  add_foreign_key "reports", "users"
 end
