@@ -8,6 +8,7 @@ class UsersController < ApplicationController
 		@user = User.new(user_params)
 		User.transaction do
 			@user.points = 0
+			@user.email_verified = false
 			@user.save!
 			render json: { success: "Created user" }
 		end
@@ -35,6 +36,6 @@ private
 	end
 
 	def user_params
-		params.permit([:username, :password, :phone, :display_name])
+		params.permit([:username, :password, :phone, :email, :display_name])
 	end
 end
