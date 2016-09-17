@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 	has_many :wishes
 	has_many :reports
 	has_many :activities
@@ -8,4 +8,6 @@ class User < ActiveRecord::Base
 
 	scope :get_user, -> (user_id, username, password) { where id: user_id, username: username, password: password }
 	scope :get_user, -> (username, password) { where username: username, password: password }
+
+	before_save { |user| user.username = user.username.downcase }
 end

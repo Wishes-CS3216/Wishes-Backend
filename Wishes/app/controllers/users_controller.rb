@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 		User.transaction do
 			@user.points = 200
 			@user.save!
+			render json: { success: "Created user" }
 		end
 	end
 

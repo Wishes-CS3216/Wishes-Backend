@@ -24,10 +24,12 @@ ActiveRecord::Schema.define(version: 20160916143718) do
   end
 
   create_table "reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.integer  "reporter_id"
-    t.integer  "reportee_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "reported_user_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["reported_user_id"], name: "index_reports_on_reported_user_id", using: :btree
+    t.index ["user_id"], name: "index_reports_on_user_id", using: :btree
   end
 
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -56,5 +58,6 @@ ActiveRecord::Schema.define(version: 20160916143718) do
 
   add_foreign_key "activities", "users"
   add_foreign_key "activities", "wishes"
+  add_foreign_key "reports", "users"
   add_foreign_key "wishes", "users"
 end

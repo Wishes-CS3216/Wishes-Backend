@@ -1,8 +1,8 @@
 class CreateReports < ActiveRecord::Migration[5.0]
   def change
     create_table :reports do |t|
-      t.integer :reporter_id
-      t.integer :reportee_id
+      t.belongs_to :user, index: true, foreign_key: true
+      t.references :reported_user, references: :users, index: true
 
       t.timestamps
     end
