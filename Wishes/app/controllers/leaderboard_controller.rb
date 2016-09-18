@@ -1,6 +1,6 @@
 class LeaderboardController < ApplicationController
 	def show
-		@users = User.select(:id, :display_name, :points)
+		@users = User.select(:id, :username, :display_name, :points)
 
 		# Rank users by points, take the top 10
 		@rank_users_by_points = @users.order(points: :desc).limit(10)
