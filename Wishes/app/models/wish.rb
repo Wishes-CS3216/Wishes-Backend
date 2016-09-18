@@ -13,6 +13,4 @@ class Wish < ApplicationRecord
     "Wish-er marked as fulfilled"   => 2,
     "Wish-er marked as unfulfilled" => 3
   }
-
-  scope :get_wishes, -> (user_id) { where user_id: user_id }
 end
