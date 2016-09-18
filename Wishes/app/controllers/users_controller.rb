@@ -1,4 +1,14 @@
 class UsersController < ApplicationController
+	include ActionController::HttpAuthentication::Token::ControllerMethods
+
+	before_filter :restrict_access, except: [ :login, :create ]
+  
+	def restrict_access
+	  authenticate_or_request_with_http_token do |token, options|
+	    User.exists?(auth_token: token)
+	  end
+	end
+
 	def login
 		@user = User.user_login(params[:username], params[:password])
 		return_user_as_json(@user)
@@ -15,8 +25,8 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = User.user_show(params[:user_id], params[:username], params[:password])
-		return_user_as_json(@user)
+		@user = User.find(params[:user_id])
+		render json: @user.as_json
 	end
 
 	def update
