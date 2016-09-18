@@ -13,4 +13,19 @@ class Wish < ApplicationRecord
     "Wish-er marked as fulfilled"   => 2,
     "Wish-er marked as unfulfilled" => 3
   }
+
+  validates :title, presence: true, length: {minimum: 5}
+  validate :assigned_user_exists, :assigned_user_is_not_this_user
+
+  def assigned_user_exists
+    if assigned_to && User.where(id: assigned_to).empty?
+      errors.add(:assigned_to, "Assigned user does not exist.")
+    end
+  end
+
+  def assigned_user_is_not_this_user
+    if assigned_to && assigned_to == user_id
+      errors.add(:assigned_to, "Cannot assign your wish to yourself.")
+    end
+  end
 end

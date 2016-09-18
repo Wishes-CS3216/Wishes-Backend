@@ -25,8 +25,7 @@ Rails.application.routes.draw do
 						post '/' => 'wishes#create' 
 						scope '/:wish_id' do
 							get '/' => 'wishes#show'
-							get '/edit' => 'wishes#edit'
-							put '' => 'wishes#update'
+							put '/' => 'wishes#update'
 						end
 					end
 				end
