@@ -13,6 +13,8 @@ class User < ApplicationRecord
 	before_validation { |user| user.username = user.username.downcase }
 	before_create :generate_authentication_token!
 
+	has_secure_password
+
 private
 	def generate_authentication_token!
     begin
