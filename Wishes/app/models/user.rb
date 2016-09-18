@@ -4,7 +4,7 @@ class User < ApplicationRecord
 	has_many :activities
 
 	validates :username, presence: true, uniqueness: true
-	validates :password, presence: true
+	validates :password, presence: true, length: { minimum: 6 }
 	validates :auth_token, uniqueness: true
 
 	#scope :user_show, -> (user_id, username, password) { where id: user_id, username: username, password: password }
