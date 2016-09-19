@@ -66,4 +66,19 @@ private
 		params.permit({wish: [:title, :description, :assigned_to, 
 			                  :requires_meetup, :address, :latitude, :longitude]})
 	end
+
+	def distance(latitude, longitude, user_id, max_distance)
+		# Here's the SQL statement that will find the closest locations
+		# that are within a radius of max_distance (in km) to the (latitude, longitude) coordinate.
+		# It calculates the distance based on the latitude/longitude of that row and the target latitude/longitude,
+		# and then asks for only rows where the distance value is less than max_distance,
+		# with additional filters like not ownself's wish and wish is not assigned to anyone,
+		# then orders the whole query by distance.
+		sql = "SELECT *, ( 6371 * acos( cos( radians(#{latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(#{longitude}) ) + sin( radians(#{latitude}) ) * sin( radians( latitude ) ) ) ) AS distance
+		       FROM wishes
+		       WHERE user_id != #{user_id} AND assigned_to IS NULL
+		       HAVING distance < #{max_distance}
+		       ORDER BY distance"
+		wishes = Wish.find_by_sql(sql)
+	end
 end
