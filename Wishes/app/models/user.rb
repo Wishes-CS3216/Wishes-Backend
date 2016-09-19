@@ -3,17 +3,12 @@ class User < ApplicationRecord
 	has_many :reports
 	has_many :activities
 
+	has_secure_password
 	validates :username, presence: true, uniqueness: true
-	validates :password, presence: true, length: { minimum: 6, maximum: 72 }
 	validates :auth_token, uniqueness: true
-
-	#scope :user_show, -> (user_id, username, password) { where id: user_id, username: username, password: password }
-	scope :user_login, -> (username, password) { where username: username, password: password }
 
 	before_validation { |user| user.username = user.username.downcase }
 	before_create :generate_authentication_token!
-
-	has_secure_password
 
 private
 	def generate_authentication_token!

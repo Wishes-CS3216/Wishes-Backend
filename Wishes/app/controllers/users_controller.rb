@@ -33,7 +33,7 @@ class UsersController < ApplicationController
 		if params[:username].present? && params[:old_password].present? && params[:new_password].present?
 			if @user.username != params[:username].downcase
 				render json: { error: "Username does not match." }
-			elsif @user.password != params[:old_password]
+			elsif !@user.authenticate(params[:old_password])
 				render json: { error: "Your old password does not match." }
 			else
 				User.transaction do
@@ -80,6 +80,7 @@ private
 	end
 
 	def user_params
+		params[:user][:password] = params[:password]
 		params.permit({user: [:username, :password, :phone, :email, :display_name]})
 	end
 
