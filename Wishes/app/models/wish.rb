@@ -15,7 +15,23 @@ class Wish < ApplicationRecord
   }
 
   validates :title, presence: true, length: {minimum: 5}
+  validates :requires_meetup, inclusion: { in: [ true, false ] }
+  validate :requires_meetup_must_have_geolocation
   validate :assigned_user_exists, :assigned_user_is_not_this_user
+
+  def requires_meetup_must_have_geolocation
+    if requires_meetup
+      if address == nil || address.empty?
+        errors.add(:address, "Cannot be empty.")
+      end
+      if latitude == nil
+        errors.add(:latitude, "Cannot be empty.")
+      end
+      if longitude == nil
+        errors.add(:longitude, "Cannot be empty.")
+      end
+    end
+  end
 
   def assigned_user_exists
     if assigned_to && User.where(id: assigned_to).empty?

@@ -20,7 +20,7 @@ class WishesController < ApplicationController
 			render json: { success: "Created wish" }
 		end
 	rescue Exception
-		if @wish.errors.present?
+		if @wish
 			render json: { message: "Validation failed", error: @wish.errors }
 		else
 			render json: { error: "Unknown error" }
@@ -56,6 +56,7 @@ private
 	end
 
 	def wish_params
-		params.permit({wish: [:title, :description, :assigned_to]})
+		params.permit({wish: [:title, :description, :assigned_to, 
+			                  :requires_meetup, :address, :latitude, :longitude]})
 	end
 end
