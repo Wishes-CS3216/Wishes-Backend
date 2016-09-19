@@ -19,7 +19,11 @@ class UsersController < ApplicationController
 			render json: { success: "Created user" }
 		end
 	rescue Exception
-		render json: { message: "Validation failed", error: @user.errors }
+		if @user
+			render json: { message: "Validation failed", error: @user.errors }
+		else
+			render json: { message: "Unknown error" }
+		end
 	end
 
 	def show

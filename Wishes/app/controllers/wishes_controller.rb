@@ -1,21 +1,15 @@
 class WishesController < ApplicationController
 	def index
 		@user_wishes = Wish.where(user_id: params[:user_id])
-		@user_wishes_as_json = []
-		@user_wishes.each do |wish|
-			wish_json = wish.as_json
-			wish_json[:wisher_has_contact_number] = wish.user.phone.present?
-			@user_wishes_as_json.append(wish_json)
-		end
 
 		@wishes_fulfilled_by_user = Wish.where(assigned_to: params[:user_id])
 		@wishes_fulfilled_by_user_as_json = []
 		@wishes_fulfilled_by_user.each do |wish|
 			wish_json = wish.as_json
-			wish_json[:wisher_has_contact_number] = wish.user.phone.present?
+			wish_json[:wisher_contact_number] = wish.user.phone
 			@wishes_fulfilled_by_user_as_json.append(wish_json)
 		end
-		render json: { "self": @user_wishes_as_json, "others": @wishes_fulfilled_by_user_as_json }
+		render json: { "self": @user_wishes, "others": @wishes_fulfilled_by_user_as_json }
 	end
 
 	def create
@@ -31,11 +25,6 @@ class WishesController < ApplicationController
 		else
 			render json: { error: "Unknown error" }
 		end
-	end
-
-	def show
-		@wish = Wish.where(id: params[:wish_id], user_id: params[:user_id])
-		return_wish_as_json(@wish)
 	end
 
 	def update
