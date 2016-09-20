@@ -64,7 +64,7 @@ private
 
 	def wish_params
 		params.permit({wish: [:title, :description, :assigned_to, 
-			                  :requires_meetup, :address, :latitude, :longitude]})
+			                  :needs_meetup, :address, :latitude, :longitude]})
 	end
 
 	def distance(latitude, longitude, user_id, max_distance)
