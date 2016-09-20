@@ -24,13 +24,13 @@ class WishesController < ApplicationController
 				render json: { success: "Created wish", current_points_left: @user.points }
 			end
 		end
-	rescue Exception
-		if @wish && @wish.errors
+	rescue Exception => e
+		if @wish && @wish.errors.present?
 			render json: { message: "Validation failed", error: {wish: @wish.errors, user: @user.errors} }
-		elsif @user && @user.errors
+		elsif @user && @user.errors.present?
 			render json: { message: "Validation failed", error: @user.errors }
 		else
-			render json: { error: "Unknown error" }
+			render json: { error: e }
 		end
 	end
 
