@@ -17,7 +17,7 @@ class WishesController < ApplicationController
 		@wish = Wish.new(wish_params[:wish])
 		User.transaction do
 			Wish.transaction do
-				@wish.user_id = params[:user_id]
+				@wish.user_id = @user.id
 				@wish.save!
 				@user.points -= 100
 				@user.save!
@@ -25,9 +25,9 @@ class WishesController < ApplicationController
 			end
 		end
 	rescue Exception
-		if @wish
+		if @wish && @wish.errors
 			render json: { message: "Validation failed", error: {wish: @wish.errors, user: @user.errors} }
-		elsif @user
+		elsif @user && @user.errors
 			render json: { message: "Validation failed", error: @user.errors }
 		else
 			render json: { error: "Unknown error" }
