@@ -2,11 +2,14 @@ class UsersController < ApplicationController
 	skip_before_action :restrict_access, only: [ :login, :create ]
 
 	def login
-		@user = User.find_by(username: params[:username])
-		if @user.nil?
+		user = User.find_by(username: params[:username])
+		if user.nil?
 			render json: { message: "Authentication failed" }
-		elsif @user.authenticate(params[:password])
-			render json: @user.as_json
+		elsif user.authenticate(params[:password])
+			user_json = user.as_json
+			user_json[:posted_wishes_count] = user.wishes.count
+			user_json[:accepted_wishes_count] = Wish.where(assigned_to: user.id).count
+			render json: user_json
 		else
 			render json: { message: "Authentication failed" }
 		end
