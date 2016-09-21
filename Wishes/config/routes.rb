@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
 			scope '/leaderboard' do
 				get '/' => 'leaderboard#show'
+				get '/:user_id' => 'leaderboard#show_user_rank'
 			end
 		end
 	end
