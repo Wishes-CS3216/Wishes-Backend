@@ -12,6 +12,34 @@ class WishesController < ApplicationController
 		render json: { "self": @user_wishes, "others": @wishes_fulfilled_by_user_as_json }
 	end
 
+	def get_random_wishes
+		if params[:latitude] && params[:longitude]
+			total_number_of_wishes = 9
+
+			# 1. Get random number X from 0 to 9 (uniformly distributed)
+			number_of_wishes_that_needs_meetup = rand(10)
+
+			# 2. X is the number of wishes that needs meetup. (Use geolocation to filter then take sample of size X)
+			max_distance = 3 # For now let's set it to 3km... I planned for it to be a random value as well...
+			wishes_that_needs_meetup = get_wishes_by_distance(params[:latitude], params[:longitude], params[:user_id], max_distance)
+			wishes_that_needs_meetup = sample_wishes(wishes_that_needs_meetup, number_of_wishes_that_needs_meetup)
+			
+			# 3. (9-X) is the number of wishes that does not require meetup.
+			number_of_wishes_that_does_not_need_meetup = total_number_of_wishes - wishes_that_needs_meetup.count
+			wishes_that_does_not_need_meetup = get_wishes_without_distance(params[:user_id])
+			wishes_that_does_not_need_meetup = sample_wishes(wishes_that_does_not_need_meetup, number_of_wishes_that_does_not_need_meetup)
+			
+			all_random_wishes = wishes_that_needs_meetup + wishes_that_does_not_need_meetup
+			render json: all_random_wishes.sort_by{ |wish| wish[:id] }
+		else
+			render json: { error: "Needs geolocation of this user." }
+		end
+	end
+
+	def show
+
+	end
+
 	def create
 		@user = User.find(params[:user_id])
 		@wish = Wish.new(wish_params[:wish])
@@ -67,7 +95,7 @@ private
 			                  :needs_meetup, :address, :latitude, :longitude]})
 	end
 
-	def distance(latitude, longitude, user_id, max_distance)
+	def get_wishes_by_distance(latitude, longitude, user_id, max_distance)
 		# Here's the SQL statement that will find the closest locations
 		# that are within a radius of max_distance (in km) to the (latitude, longitude) coordinate.
 		# It calculates the distance based on the latitude/longitude of that row and the target latitude/longitude,
@@ -76,9 +104,29 @@ private
 		# then orders the whole query by distance.
 		sql = "SELECT *, ( 6371 * acos( cos( radians(#{latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(#{longitude}) ) + sin( radians(#{latitude}) ) * sin( radians( latitude ) ) ) ) AS distance
 		       FROM wishes
-		       WHERE user_id != #{user_id} AND assigned_to IS NULL
+		       WHERE user_id != #{user_id} AND assigned_to IS NULL AND needs_meetup = 1
 		       HAVING distance < #{max_distance}
 		       ORDER BY distance"
 		wishes = Wish.find_by_sql(sql)
+	end
+
+	def get_wishes_without_distance(user_id)
+		sql = "SELECT *
+		       FROM wishes
+		       WHERE user_id != #{user_id} AND assigned_to IS NULL AND needs_meetup = 0"
+		wishes = Wish.find_by_sql(sql)
+	end
+
+	def sample_wishes(all_wishes, sample_size)
+		result = []
+		1.upto(sample_size) do |i|
+			if all_wishes.count > 0
+				random_index = rand(all_wishes.count)
+				random_wish = all_wishes[random_index]
+				result.append(random_wish)
+				all_wishes -= [random_wish]
+			end
+		end
+		result
 	end
 end

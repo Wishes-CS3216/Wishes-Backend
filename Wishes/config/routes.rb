@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 				scope '/:user_id' do
 					get '/' => 'users#show'
 					put '/' => 'users#update'
+					get '/getRandomWishes' => 'wishes#get_random_wishes'
 
 					scope '/reports' do
 						post '/' => 'reports#create'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
 						get '/' => 'wishes#index'
 						post '/' => 'wishes#create' 
 						scope '/:wish_id' do
+							get '/' => 'wishes#show'
 							put '/' => 'wishes#update'
 						end
 					end
