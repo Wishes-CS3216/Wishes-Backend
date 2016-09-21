@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 	def login
 		@user = User.find_by(username: params[:username])
 		if @user.nil?
-			render json: { message: "User doesn't exist" }
+			render json: { message: "Authentication failed" }
 		elsif @user.authenticate(params[:password])
 			render json: @user.as_json
 		else
