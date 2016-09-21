@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 				scope '/:user_id' do
 					get '/' => 'users#show'
 					put '/' => 'users#update'
+					get '/getRandomWishes' => 'wishes#get_random_wishes'
 
 					scope '/reports' do
 						post '/' => 'reports#create'
@@ -30,8 +31,13 @@ Rails.application.routes.draw do
 				end
 			end
 
+			scope '/wishes' do
+				get '/:wish_id' => 'wishes#show'
+			end
+
 			scope '/leaderboard' do
 				get '/' => 'leaderboard#show'
+				get '/:user_id' => 'leaderboard#show_user_rank'
 			end
 		end
 	end
