@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160919215659) do
+ActiveRecord::Schema.define(version: 20160921175500) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "user_id"
@@ -61,6 +61,9 @@ ActiveRecord::Schema.define(version: 20160919215659) do
     t.string   "address"
     t.decimal  "latitude",                     precision: 9, scale: 6
     t.decimal  "longitude",                    precision: 9, scale: 6
+    t.datetime "picked_at"
+    t.datetime "fulfilled_at"
+    t.datetime "confirmed_at"
     t.index ["user_id"], name: "index_wishes_on_user_id", using: :btree
   end
 

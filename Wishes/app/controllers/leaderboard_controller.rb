@@ -7,7 +7,7 @@ class LeaderboardController < ApplicationController
 		
 		# Rank users by number of wishes they fulfilled for others, take the top 10
 		# This line returns hash where key is user_id, value is number, sorted in descending order and taking top 10
-		@user_ids_and_counts = Wish.where(fulfill_status: 2).group(:assigned_to).count.sort_by {|key, value| value}.reverse.first(10)
+		@user_ids_and_counts = Wish.where(fulfill_status: "Wish-er marked as fulfilled").group(:assigned_to).count.sort_by {|key, value| value}.reverse.first(10)
 		
 		# This few lines maps key (user_id) to user json with count.
 		@rank_users_by_fulfill_wishes_count = []
