@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 		elsif user.authenticate(params[:password])
 			user_json = user.as_json
 			user_json[:posted_wishes_count] = user.wishes.count
-			user_json[:accepted_wishes_count] = Wish.where(assigned_to: user.id).count
+			user_json[:fulfilled_others_wishes_count] = Wish.where(assigned_to: user.id, fulfill_status: "Wish-er marked as fulfilled").count
 			render json: user_json
 		else
 			render json: { message: "Authentication failed" }
@@ -32,8 +32,11 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = User.find(params[:user_id])
-		render json: @user.as_json
+		user = User.find(params[:user_id])
+		user_json = user.as_json
+		user_json[:posted_wishes_count] = user.wishes.count
+		user_json[:fulfilled_others_wishes_count] = Wish.where(assigned_to: user.id, fulfill_status: "Wish-er marked as fulfilled").count
+		render json: user_json
 	end
 
 	def update
