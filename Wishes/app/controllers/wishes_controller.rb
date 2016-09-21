@@ -13,9 +13,8 @@ class WishesController < ApplicationController
 	end
 
 	def get_random_wishes
+		total_number_of_wishes = 9
 		if params[:latitude] && params[:longitude]
-			total_number_of_wishes = 9
-
 			# 1. Get random number X from 0 to 9 (uniformly distributed)
 			number_of_wishes_that_needs_meetup = rand(10)
 
@@ -30,14 +29,30 @@ class WishesController < ApplicationController
 			wishes_that_does_not_need_meetup = sample_wishes(wishes_that_does_not_need_meetup, number_of_wishes_that_does_not_need_meetup)
 			
 			all_random_wishes = wishes_that_needs_meetup + wishes_that_does_not_need_meetup
-			render json: all_random_wishes.sort_by{ |wish| wish[:id] }
+			all_random_wishes.shuffle!
 		else
-			render json: { error: "Needs geolocation of this user." }
+			sql = "SELECT *
+		           FROM wishes
+		           WHERE user_id != #{params[:user_id]} AND assigned_to IS NULL"
+		    wishes = Wish.find_by_sql(sql)
+		    all_random_wishes = sample_wishes(wishes, total_number_of_wishes)
 		end
+		all_random_wishes_json = []
+		all_random_wishes.each do |wish|
+			wish_json = wish.as_json
+			wish_json[:has_contact_number] = wish.user.phone.present?
+			all_random_wishes_json.append(wish_json)
+		end
+		render json: all_random_wishes_json
+	rescue Exception => e
+		render json: { error: e }
 	end
 
 	def show
-
+		wish = Wish.find(params[:wish_id])
+		render json: wish
+	rescue Exception => e
+		render json: { error: e }
 	end
 
 	def create
@@ -65,6 +80,10 @@ class WishesController < ApplicationController
 	def update
 		@wish = Wish.find(params[:wish_id])
 		if params[:assigned_to] && params[:wish_id]
+			if @wish.assigned_to != nil
+				render json: { error: "Wish is already assigned to someone." }
+				return
+			end
 			Wish.transaction do
 				@wish.update!(wish_params[:wish])
 				render json: { success: "Wish is assigned to user" }

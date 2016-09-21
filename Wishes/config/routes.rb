@@ -25,11 +25,14 @@ Rails.application.routes.draw do
 						get '/' => 'wishes#index'
 						post '/' => 'wishes#create' 
 						scope '/:wish_id' do
-							get '/' => 'wishes#show'
 							put '/' => 'wishes#update'
 						end
 					end
 				end
+			end
+
+			scope '/wishes' do
+				get '/:wish_id' => 'wishes#show'
 			end
 
 			scope '/leaderboard' do
