@@ -18,8 +18,10 @@ class WishesController < ApplicationController
 		wishes_fulfilled_by_user = Wish.where(assigned_to: params[:user_id])
 		wishes_fulfilled_by_user_as_json = []
 		wishes_fulfilled_by_user.each do |wish|
+			wisher = wish.user
 			wish_json = wish.as_json
-			wish_json[:wisher_contact_number] = wish.user.phone
+			wish_json[:wisher_display_name] = wisher.display_name
+			wish_json[:wisher_contact_number] = wisher.phone
 			wishes_fulfilled_by_user_as_json.append(wish_json)
 		end
 		render json: { "self": user_wishes_as_json, "others": wishes_fulfilled_by_user_as_json }
