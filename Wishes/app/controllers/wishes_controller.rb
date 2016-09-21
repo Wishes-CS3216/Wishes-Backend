@@ -76,6 +76,7 @@ class WishesController < ApplicationController
 		User.transaction do
 			Wish.transaction do
 				@wish.user_id = @user.id
+				@wish.fulfill_status = "Created wish, finding assignee"
 				@wish.save!
 				@user.points -= 100
 				@user.save!
@@ -97,6 +98,10 @@ class WishesController < ApplicationController
 		if params[:assigned_to]
 			if wish.assigned_to != nil
 				render json: { error: "Wish is already assigned to someone." }
+				return
+			end
+			if Wish.where(assigned_to: params[:assigned_to], fulfill_status: "In progress").count >= 3
+				render json: { error: "User have too many incomplete assigned wishes."}
 				return
 			end
 			Wish.transaction do

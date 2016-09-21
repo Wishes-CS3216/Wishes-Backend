@@ -8,10 +8,11 @@ class Wish < ApplicationRecord
   # Wish-er can then decide whether it is fulfilled or unfulfilled, where different actions might be taken.
 
   enum fulfill_status: {
-    "In progress"                   => 0,
-    "Do-er marked as fulfilled"     => 1,
-    "Wish-er marked as fulfilled"   => 2,
-    "Wish-er marked as unfulfilled" => 3
+    "Created wish, finding assignee" => 0,
+    "In progress"                    => 1,
+    "Do-er marked as fulfilled"      => 2,
+    "Wish-er marked as fulfilled"    => 3,
+    "Wish-er marked as unfulfilled"  => 4
   }
 
   validates :title, presence: true, length: {minimum: 5}
