@@ -3,7 +3,9 @@ class UsersController < ApplicationController
 
 	def login
 		@user = User.find_by(username: params[:username])
-		if @user.authenticate(params[:password])
+		if @user.nil?
+			render json: { message: "Authentication failed" }
+		elsif @user.authenticate(params[:password])
 			render json: @user.as_json
 		else
 			render json: { message: "Authentication failed" }
