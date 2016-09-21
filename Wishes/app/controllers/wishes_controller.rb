@@ -78,22 +78,58 @@ class WishesController < ApplicationController
 	end
 
 	def update
-		@wish = Wish.find(params[:wish_id])
-		if params[:assigned_to] && params[:wish_id]
-			if @wish.assigned_to != nil
+		wish = Wish.find(params[:wish_id])
+		if params[:assigned_to]
+			if wish.assigned_to != nil
 				render json: { error: "Wish is already assigned to someone." }
 				return
 			end
 			Wish.transaction do
-				@wish.update!(wish_params[:wish])
+				wish.assigned_to = wish_params[:wish][:assigned_to]
+				wish.fulfill_status = "In progress"
+				wish.picked_at = DateTime.now
+				wish.save!
 				render json: { success: "Wish is assigned to user" }
 			end
+		elsif params[:fulfill_status]
+			wisher = User.find(wish.user_id)
+			doer = User.find(wish.assigned_to)
+			Wish.transaction do
+				User.transaction do
+					case params[:wish][:fulfill_status]
+					when "Do-er marked as fulfilled"
+						if wish.fulfill_status == "In progress"
+							wish.fulfill_status = params[:wish][:fulfill_status]
+							wish.fulfilled_at = DateTime.now
+						end
+					when "Wish-er marked as fulfilled"
+						if wish.fulfill_status
+							wish.fulfill_status = params[:wish][:fulfill_status]
+							wish.confirmed_at = DateTime.now
+							doer.points += 100
+							wisher.points += 30
+						end
+					when "Wish-er marked as unfulfilled"
+						if wish.fulfill_status
+							wish.fulfill_status = params[:wish][:fulfill_status]
+							wish.confirmed_at = DateTime.now
+						end
+					else
+						render json: { error: "No such fulfill_status." }
+						return
+					end
+					wish.save!
+					doer.save!
+					wisher.save!
+					render json: { success: "Updated fulfill status." }
+				end
+			end
 		end
-	rescue Exception
+	rescue Exception => e
 		if @wish.errors.present?
 			render json: { message: "Validation failed", error: @wish.errors }
 		else
-			render json: { error: "Unknown error" }
+			render json: { error: e }
 		end
 	end
 
