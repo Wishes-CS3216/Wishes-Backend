@@ -3,12 +3,22 @@ class UsersController < ApplicationController
 
 	def login
 		user = User.find_by(username: params[:username])
+		got_claim_bonus = false
 		if user.nil?
 			render json: { message: "Authentication failed" }
 		elsif user.authenticate(params[:password])
+			if !user.claimed_daily_bonus
+				User.transaction do
+					user.points += 30
+					user.claimed_daily_bonus = true
+					got_claim_bonus = true
+					user.save!
+				end
+			end
 			user_json = user.as_json
 			user_json[:posted_wishes_count] = user.wishes.count
 			user_json[:fulfilled_others_wishes_count] = Wish.where(assigned_to: user.id, fulfill_status: "Wish-er marked as fulfilled").count
+			user_json[:got_claim_bonus] = got_claim_bonus
 			render json: user_json
 		else
 			render json: { message: "Authentication failed" }

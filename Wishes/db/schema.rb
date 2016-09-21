@@ -40,10 +40,11 @@ ActiveRecord::Schema.define(version: 20160921175500) do
     t.string   "display_name"
     t.string   "random_name"
     t.integer  "points"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
     t.string   "auth_token"
     t.string   "password_digest"
+    t.boolean  "claimed_daily_bonus"
     t.index ["auth_token"], name: "index_users_on_auth_token", unique: true, using: :btree
   end
 
