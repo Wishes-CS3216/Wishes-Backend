@@ -101,7 +101,7 @@ class WishesController < ApplicationController
 				return
 			end
 			if Wish.where(assigned_to: params[:assigned_to], fulfill_status: "In progress").count >= 3
-				render json: { error: "User have too many incomplete assigned wishes."}
+				render json: { error: "Assignee have too many incomplete assigned wishes."}
 				return
 			end
 			Wish.transaction do
