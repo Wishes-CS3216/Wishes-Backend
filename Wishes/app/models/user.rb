@@ -4,7 +4,7 @@ class User < ApplicationRecord
 	has_many :activities
 
 	has_secure_password
-	validates :username, presence: true, uniqueness: true, length: {minimum: 6}
+	validates :username, presence: true, uniqueness: true, length: {minimum: 5}
 	validates :auth_token, uniqueness: true
 	validates :points, numericality: { greater_than_or_equal_to: 0 }
 
