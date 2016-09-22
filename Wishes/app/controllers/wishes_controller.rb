@@ -6,7 +6,7 @@ class WishesController < ApplicationController
 			wish_json = wish.as_json
 			if wish.assigned_to
 				assignee = User.find(wish.assigned_to)
-				wish_json[:assignee_display_name] = assignee.display_name
+				wish_json[:assignee_display_name] = (assignee.display_name) ? assignee.display_name : assignee.username
 				wish_json[:assignee_phone] = assignee.phone
 			else
 				wish_json[:assignee_display_name] = nil
@@ -20,7 +20,7 @@ class WishesController < ApplicationController
 		wishes_fulfilled_by_user.each do |wish|
 			wisher = wish.user
 			wish_json = wish.as_json
-			wish_json[:wisher_display_name] = wisher.display_name
+			wish_json[:wisher_display_name] = (wisher.display_name) ? wisher.display_name : wisher.username
 			wish_json[:wisher_contact_number] = wisher.phone
 			wishes_fulfilled_by_user_as_json.append(wish_json)
 		end
